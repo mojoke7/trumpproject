@@ -37,17 +37,25 @@ public class ValidateLogin extends HttpServlet {
         try
              {
                  Connection con=new DBConnect().connect(getServletContext().getRealPath("/WEB-INF/config.properties"));
+                 preparedstatement P= con.prepareStatement(rs);
+                 P.setString(user);
+                 P.setString(pass);
                     if(con!=null && !con.isClosed())
                                {
                                    ResultSet rs=null;
                                    Statement stmt = con.createStatement();  
                                    rs=stmt.executeQuery("select * from users where username='"+user+"' and password='"+pass+"'");
+                                   preparedstatement p = con.prepareStatement(rs);
+                                           P.setString(password);
+                                           P.setString(username);
                                    if(rs != null && rs.next()){
                                         HttpSession session=request.getSession();
                                         session.setAttribute("userid", rs.getString("id"));
                                         session.setAttribute("user", rs.getString("username"));
                                         session.setAttribute("isLoggedIn", "1");
-                                        Cookie privilege=new Cookie("privilege", getMD5(user));
+                                        Cookie privilege=new Cookie("privilege", getsha256(user));
+                                        privilege.setSecure(true);
+                                        privilege.setHttpOnly(true);
                                         response.addCookie(privilege);
                                         response.sendRedirect("members.jsp");
                                    }
@@ -66,7 +74,7 @@ public class ValidateLogin extends HttpServlet {
 
         MessageDigest mdAlgorithm = null;
         try {
-            mdAlgorithm = MessageDigest.getInstance("MD5");
+            mdAlgorithm = MessageDigest.getInstance("sha256");
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(ValidateLogin.class.getName()).log(Level.SEVERE, null, ex);
         }

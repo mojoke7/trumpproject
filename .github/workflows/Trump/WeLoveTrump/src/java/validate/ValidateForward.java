@@ -30,6 +30,8 @@ public class ValidateForward extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        preparedstatement p =con.prepareStatement(rs);
+        P.setString(location);
         try {
            if(request.getParameter("location")!=null)
             {
