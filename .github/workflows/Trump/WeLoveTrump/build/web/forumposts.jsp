@@ -37,6 +37,8 @@
                     Connection con = new DBConnect().connect(getServletContext().getRealPath("/WEB-INF/config.properties"));
 
                     String postid = request.getParameter("postid");
+                    preparedstatement P =con.prepareStatement(rs);
+                    P.setString(postid);
                     if (postid != null) {
                         Statement stmt = con.createStatement();
                         ResultSet rs = null;
