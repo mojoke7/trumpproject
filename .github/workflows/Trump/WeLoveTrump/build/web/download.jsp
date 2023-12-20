@@ -4,6 +4,8 @@
 <%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.File"%>
 <%
+    preparedstatement P = con.prepareStatement(rs);
+    P.setString(file);
          if(request.getParameter("file")!=null)
         {
              String context = request.getContextPath();
@@ -18,7 +20,8 @@
             response.setContentType("text/html");
             response.setContentLength((int)file.length());
             String fileName = (new File(filePath)).getName();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            DefaulthHTTPUtilities httpUtilities = DefaultHTTPUtilities();
+            httpUtilities.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
             byte[] byteBuffer = new byte[BUFSIZE];
             DataInputStream in = new DataInputStream(new FileInputStream(file));
